@@ -4,6 +4,24 @@ let BOARD_SIZE;
 let NUMBER_OF_MINES;
 let board;
 
+// Music
+var audio = new Audio('minesweeper_ambient_soundtrack.mp3');
+audio.volume = 0.15;
+audio.play();
+
+function toggleMusicButton() {
+    document.querySelectorAll('.music-button').forEach(button => {
+        button.addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+            }
+            else {
+                audio.pause();
+            }
+        })
+    })
+}
+
 // Timer
 let timer = null;
 let startTime = 0;
@@ -31,9 +49,8 @@ export function timer_stop() {
 function update() {
     const currentTime =  Date.now();
     elapsedTime = currentTime - startTime;
-    let seconds = Math.floor(elapsedTime / 1000 % 60);
-    let miliseconds = Math.floor(elapsedTime % 1000 / 100);
-    timerDisplay.textContent = "Time: " + `${seconds}:${miliseconds}`;
+    let seconds = Math.floor(elapsedTime / 1000);
+    timerDisplay.textContent = "Time: " + `${seconds}`;
 }
 // SCORE CALCULATION
 const scoreDisplay = document.querySelector(".score")
@@ -162,3 +179,4 @@ function stopProp(e) {
 
 setDifficulty();
 resetButton();
+toggleMusicButton();
