@@ -4,18 +4,60 @@ let BOARD_SIZE;
 let NUMBER_OF_MINES;
 let board;
 
+// Timer
+let timer = null;
+let startTime = 0;
+let elapsedTime = 0;
+let isRunning = false;
+
+const timerDisplay = document.querySelector(".timer");
+
+export function timer_start() {
+    if (!isRunning) {
+        startTime = Date.now() - elapsedTime;
+        timer = setInterval(update, 10);
+        isRunning = true;
+    }
+}
+
+export function timer_stop() {
+    if (isRunning) {
+        clearInterval(timer);
+        elapsedTime = Date.now() - startTime;
+        isRunning = false;
+    }
+}
+
+function update() {
+    const currentTime =  Date.now();
+    elapsedTime = currentTime - startTime;
+    let seconds = Math.floor(elapsedTime / 1000 % 60);
+    let miliseconds = Math.floor(elapsedTime % 1000 / 100);
+    timerDisplay.textContent = "Time: " + `${seconds}:${miliseconds}`;
+}
+// SCORE CALCULATION
+const scoreDisplay = document.querySelector(".score")
+
+function scoreCalc() {
+    const MINE_MULT = NUMBER_OF_MINES;
+    const TIME_MULT = elapsedTime / 100;
+    const SCORE = Math.round(MINE_MULT * TIME_MULT);
+    scoreDisplay.textContent = "Score: " + SCORE;
+}
+
+// Minesweeper
 export function difficulty(level) {
     if (level === "easy") {
-        BOARD_SIZE = 5;
-        NUMBER_OF_MINES = 3;
-    }
-    else if (level === "medium") {
-        BOARD_SIZE = 8;
+        BOARD_SIZE = 10;
         NUMBER_OF_MINES = 10;
     }
-    else if (level === "hard") {
+    else if (level === "medium") {
         BOARD_SIZE = 12;
         NUMBER_OF_MINES = 20;
+    }
+    else if (level === "impossible") {
+        BOARD_SIZE = 16;
+        NUMBER_OF_MINES = 35;
     }
     resetBoard();
 }
@@ -38,6 +80,9 @@ function resetButton() {
 }
 
 function resetBoard() {
+    timer_stop();
+    elapsedTime = 0;
+    scoreDisplay.textContent = "";
     const boardElement = document.querySelector(".board");
     
     const minesLeftText = document.querySelector(".subtext");
@@ -65,6 +110,7 @@ function resetBoard() {
         });
     });
     newBoardElement.style.setProperty("--size", BOARD_SIZE);
+    timer_start()
 }
 
 function listMinesLeft() {
@@ -90,6 +136,8 @@ function checkGameEnd() {
 
     if (win) {
         messageText.textContent = 'You Win!';
+        timer_stop();
+        scoreCalc();
     }
 
     if (lose) {
@@ -104,6 +152,7 @@ function checkGameEnd() {
                 }
             });
         });
+        timer_stop();
     }
 }
 
