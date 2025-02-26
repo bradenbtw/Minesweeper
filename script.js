@@ -7,7 +7,7 @@ let board;
 export function difficulty(level) {
     if (level === "easy") {
         BOARD_SIZE = 5;
-        NUMBER_OF_MINES = 5;
+        NUMBER_OF_MINES = 3;
     }
     else if (level === "medium") {
         BOARD_SIZE = 8;
@@ -17,7 +17,6 @@ export function difficulty(level) {
         BOARD_SIZE = 12;
         NUMBER_OF_MINES = 20;
     }
-
     resetBoard();
 }
 
@@ -40,10 +39,10 @@ function resetButton() {
 
 function resetBoard() {
     const boardElement = document.querySelector(".board");
-    const messageText = document.querySelector(".subtext");
-
-    messageText.textContent = `Mines Left: ${NUMBER_OF_MINES}`;
-
+    
+    const minesLeftText = document.querySelector(".subtext");
+    minesLeftText.textContent = "Mines Left: " + NUMBER_OF_MINES;
+    
     const newBoardElement = boardElement.cloneNode(false);
     boardElement.replaceWith(newBoardElement);
 
@@ -65,19 +64,18 @@ function resetBoard() {
             });
         });
     });
-
     newBoardElement.style.setProperty("--size", BOARD_SIZE);
-    document.querySelector("[data-mine-count]").textContent = NUMBER_OF_MINES;
 }
 
-
 function listMinesLeft() {
-    const minesLeftText = document.querySelector("[data-mine-count]");
+    const minesLeftText = document.querySelector(".subtext");
     const markedTilesCount = board.reduce((count, row) => {
         return count + row.filter(tile => tile.status === TILE_STATUSES.MARKED).length;
     }, 0);
-    minesLeftText.textContent = NUMBER_OF_MINES - markedTilesCount;
+    const newMineNum = NUMBER_OF_MINES - markedTilesCount;
+    minesLeftText.textContent = "Mines Left: " + newMineNum;
 }
+
 
 function checkGameEnd() {
     const win = checkWin(board);

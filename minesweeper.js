@@ -44,6 +44,7 @@ export function markTile(tile) {
     else {
         tile.status = TILE_STATUSES.MARKED
     }
+    console.log(`Tile status after marking: ${tile.status}`);
        
 }
 
