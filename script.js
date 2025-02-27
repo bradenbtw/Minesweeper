@@ -4,7 +4,7 @@ let BOARD_SIZE;
 let NUMBER_OF_MINES;
 let board;
 
-// Music
+// MUSIC
 var audio = new Audio('minesweeper_ambient_soundtrack.mp3');
 audio.volume = 0.15;
 audio.play();
@@ -22,7 +22,7 @@ function toggleMusicButton() {
     })
 }
 
-// Timer
+// TIMER
 let timer = null;
 let startTime = 0;
 let elapsedTime = 0;
@@ -54,15 +54,21 @@ function update() {
 }
 // SCORE CALCULATION
 const scoreDisplay = document.querySelector(".score")
+let highScore = 0;
+const leaderboardDisplay = document.querySelector(".highscore");
 
 function scoreCalc() {
     const MINE_MULT = NUMBER_OF_MINES;
     const TIME_MULT = elapsedTime / 100;
     const SCORE = Math.round(MINE_MULT * TIME_MULT);
     scoreDisplay.textContent = "Score: " + SCORE;
+    if (SCORE > highScore) {
+        highScore = SCORE;
+    }
+    leaderboardDisplay.textContent = "High Score: " + highScore;
 }
 
-// Minesweeper
+// MINESWEEPER
 export function difficulty(level) {
     if (level === "easy") {
         BOARD_SIZE = 10;
