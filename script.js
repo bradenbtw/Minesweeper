@@ -58,17 +58,22 @@ let highScore = 0;
 const leaderboardDisplay = document.querySelector(".highscore");
 
 function scoreCalc() {
-    const MINE_MULT = NUMBER_OF_MINES;
-    const TIME_MULT = elapsedTime / 100;
+    const MINE_MULT = NUMBER_OF_MINES*100;
+    const seconds = Math.floor(elapsedTime / 1000)
+    const TIME_MULT = seconds^-1 * 1000;
     const SCORE = Math.round(MINE_MULT * TIME_MULT);
     scoreDisplay.textContent = "Score: " + SCORE;
     if (SCORE > highScore) {
         highScore = SCORE;
     }
     leaderboardDisplay.textContent = "High Score: " + highScore;
+    return SCORE;
 }
 
 // MINESWEEPER
+let mysteryButton = document.querySelector(".mystery-button");
+
+
 export function difficulty(level) {
     if (level === "easy") {
         BOARD_SIZE = 10;
@@ -82,11 +87,21 @@ export function difficulty(level) {
         BOARD_SIZE = 16;
         NUMBER_OF_MINES = 35;
     }
+    else if (level === "mystery") {
+        BOARD_SIZE = 16;
+        NUMBER_OF_MINES = 45;
+    }
     resetBoard();
 }
 
 function setDifficulty() {
     document.querySelectorAll('.difficulty-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const level = this.innerText.toLowerCase();
+            difficulty(level);
+        })
+    })
+    document.querySelectorAll('.mystery-button').forEach(button => {
         button.addEventListener('click', function() {
             const level = this.innerText.toLowerCase();
             difficulty(level);
@@ -160,7 +175,10 @@ function checkGameEnd() {
     if (win) {
         messageText.textContent = 'You Win!';
         timer_stop();
-        scoreCalc();
+        let SCORE = scoreCalc();
+        if (SCORE > 28000) {
+            mysteryButton.style.display = "block";
+        }
     }
 
     if (lose) {
