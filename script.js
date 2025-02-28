@@ -54,25 +54,26 @@ function update() {
 }
 // SCORE CALCULATION
 const scoreDisplay = document.querySelector(".score")
-let highScore = 0;
 const leaderboardDisplay = document.querySelector(".highscore");
+let highScore = 0;
 
 function scoreCalc() {
-    const MINE_MULT = NUMBER_OF_MINES*100;
-    const seconds = Math.floor(elapsedTime / 1000)
-    const TIME_MULT = seconds^-1 * 1000;
+    const MINE_MULT = NUMBER_OF_MINES * 1000;
+    console.log(MINE_MULT);
+    const seconds = elapsedTime / 1000;
+    console.log(seconds);
+    const TIME_MULT = (1/seconds) * 10;
+    console.log(TIME_MULT);
     const SCORE = Math.round(MINE_MULT * TIME_MULT);
     scoreDisplay.textContent = "Score: " + SCORE;
     if (SCORE > highScore) {
         highScore = SCORE;
     }
     leaderboardDisplay.textContent = "High Score: " + highScore;
-    return SCORE;
 }
 
 // MINESWEEPER
 let mysteryButton = document.querySelector(".mystery-button");
-
 
 export function difficulty(level) {
     if (level === "easy") {
@@ -89,7 +90,7 @@ export function difficulty(level) {
     }
     else if (level === "mystery") {
         BOARD_SIZE = 16;
-        NUMBER_OF_MINES = 45;
+        NUMBER_OF_MINES = 50;
     }
     resetBoard();
 }
@@ -175,8 +176,8 @@ function checkGameEnd() {
     if (win) {
         messageText.textContent = 'You Win!';
         timer_stop();
-        let SCORE = scoreCalc();
-        if (SCORE > 28000) {
+        scoreCalc();
+        if (NUMBER_OF_MINES === 35) {
             mysteryButton.style.display = "block";
         }
     }
